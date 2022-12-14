@@ -52,7 +52,7 @@ class Character {
         else if(this.activeSpell){
             const spellPower = this.activeSpell.power;
             const magicPower = this.magic;
-            console.log (magicPower, "magic damage and spell damage", spellPower);
+         // this was to verify compute   console.log (magicPower, "magic damage and spell damage", spellPower);
             return spellPower + magicPower;
         }
         else if(this.activeWeapon){
@@ -62,6 +62,10 @@ class Character {
         else {
             return this.attack;
         }
+    }
+    // add a new pet to the character's pets array
+    addPet(petName){
+        this.pets.push(petName);
     }
     summonPet(petName){
         // if we have a pet in our this.pets array, that maches the name passed in as an argument to this function
@@ -77,16 +81,27 @@ class Character {
 
         }
     }
+    // add a spell to the character's spells array
+    addSpell(spellName){
+        this.spells.push(spellName);
+    }
+    //cast the activeSpell and cause damage
     castSpell(spellName){
         for(let i=0; i < this.spells.length; i++){
             const spell = this.spells[i];
-            if (spell.name === spellName){
+            if (spell.name === spellName && this.mana != 0 && this.mana >= this.spells[i].mana){
                 this.activeWeapon = null;
                 this.activePet = null;
                 this.activeSpell = spell;
             }
         }
     }
+    //this adds a new weapon to the character's weapons array
+    addWeapon(weaponName){
+        this.weapons.push(weaponName);
+    }
+
+    //this equips the named weapon to the character's activeWeapon
     equipWeapon(weaponName){
         for (let i=0; i< this.weapons.length; i++){
             const weapon = this.weapons[i];
