@@ -1,5 +1,6 @@
 const Pet = require ("./pet");
 const morningstar = require("../weapons/morningstar")
+const bastardsword = require("../weapons/bastardsword")
 const lightheal = require("../spells/lightheal")
 const Character = require("./character");
 const config = require("../config/config");
@@ -11,6 +12,7 @@ class Shaman extends Character {
         this.pets = [];
         this.pets.push(pet);
         this.weapons.push(morningstar);
+        this.weapons.push(bastardsword);
         this.spells.push(lightheal);
     }
 }

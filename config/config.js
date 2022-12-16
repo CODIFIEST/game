@@ -10,7 +10,7 @@ const config = {
         lightheal: "Light Heal",
         poisoncloud: "Poison Cloud"
     },
-    weapoNames: {
+    weaponNames: {
         morningstar: "Morning Star",
         bastardsword: "Bastard Sword",
         thunderfury: "Thunder Fury"

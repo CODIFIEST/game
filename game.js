@@ -72,6 +72,8 @@ const chance = new Chance;
 let randomMobber = mobs[chance.integer({min:0, max: (mobs.length-1)})]
 // console.log("the random mobber is ", randomMobber)
 // console.log(randomMobber.name, "jumps out and attacks you! Inflicting", randomMobber.damage, "damage");
+
+
 ///////////////////////////////////////////////////
 // GAME TIME
 // - Choose a class, instantiate your character based on that class. Throw an error if that class is not available.
@@ -97,133 +99,162 @@ async function gameloop(){
        
     }
 //    console.log ("your character deals", character.getDamage(),"\n or" ,character.attack); 
+
+////////////mobattack loop
+function mobAttack(){
+    console.log(randomMobber.name, " attacks you! Inflicting", randomMobber.damage, "damage and has", randomMobber.health, "health remaining");
+   // subtract damage automatically just because
+    character.health -= randomMobber.damage;
+    console.log(character.name, "only has", character.health, "HP left\n\n")
+    }
+/////////////////////////
+//I am going to put the weaponloop here so it knows what character and the function is delcared before attackloop
 ///////////////////////////////////////////////
     //     else {
     //    console.error("try again shithead, that is not 1,2 or 3")}
     //     }\\\\\\\\\\\\\\\\\\\\
     /////////////////////////////////////////////////////////////////
     async function attackloop(){
-        let yourMove;
-        while(!yourMove){
-            console.log("You can attack, equip a weapon, summon a pet, or cast a spell each turn")
-            const killMob = await prompt("Press 1 2 3 or 4. If you press something else, you WILL lose a turn. kek\n")
-            if (killMob === "1"){
-                yourMove = true;
-                randomMobber.health -= character.attack;
-                console.log("KERSPLAT!!!",randomMobber.name,"has", randomMobber.health, "health left")                 
-            }  
+        ///////////////put the while loop here to test
+      //////////////////////////////////////////////////////
+        while ((character.health > 0) || (randomMobber.health > 0)){   
+            let yourMove;
+            while((!yourMove) && ((character.health > 0) || (randomMobber.health > 0))){
+                console.log("You can attack, equip a weapon, summon a pet, or cast a spell each turn")
+                const killMob = await prompt("Press 1 2 3 or 4. If you press something else, you WILL lose a turn. kek\n")
+                if (killMob === "1"){
+                    yourMove = true;
+                    randomMobber.health -= character.attack;
+                    console.log("KERSPLAT!!!",randomMobber.name,"has", randomMobber.health, "health left")    
+                    mobAttack();        
+                }  
+                else if(killMob === "2"){
+                    yourMove = true;
+                    await weaponLoop();
+                    // console.log(randomMobber.name, "mid weapon switching attacks you! Inflicting", randomMobber.damage, "damage and has", randomMobber.health, "health remaining");
+
+                    // // subtract damage automatically just because
+                    //         character.health -= randomMobber.damage;
+                    //         console.log(character.name, "only has", character.health, "HP left\n\n")
+                            mobAttack();    
+                }
+                
+                else if(killMob === "3"){
+                    yourMove = true;
+                    await petLoop();
+                    mobAttack();
+                }
+                else if(killMob === "4"){
+                    yourMove = true;
+                    await spellLoop();
+                    mobAttack();
+                }
+                else{
+                    yourMove = true;
+                    console.log("You can't do that, press 1,2,3, or 4\n")
+                    console.log(randomMobber.name, "knows you are fumbling and attacks you! Inflicting", randomMobber.damage, "damage and has", randomMobber.health, "health remaining");
+
+                    // subtract damage automatically just because
+                            character.health -= randomMobber.damage;
+                            console.log(character.name, "only has", character.health, "HP left\n\n")
+                    //console.log("OR 3rd place do we get here?")
+                  //  mobAttack();
+                }
+            }
+        }   
+    }
+    async function weaponLoop(){
+       // yes we do. console.log("do we get here?")
+      //  console.log(character.weapons[0]);
+        for(let i=0; i<character.weapons.length;i++){
+            console.log("Press ", (i+1), " for ", character.weapons[i])
+        }
+        const myWeapon = await prompt("What weapon do you want to equip?\n");
+        if(character.weapons[parseInt(myWeapon)-1]){
+            if(myWeapon==="1"){
+                let elementOfArray = character.weapons[parseInt(myWeapon)-1];
+                randomMobber.health-= character.getDamage(elementOfArray.name);
+                console.log("BOINK!!! You attack, doing",character.getDamage(elementOfArray.name), "damage.\n",randomMobber.name,"has", randomMobber.health, "health left")                 
+            }
+            else if(myWeapon==="2"){
+                let elementOfArray = character.weapons[parseInt(myWeapon)-1];
+                randomMobber.health-= character.getDamage(elementOfArray.name);
+                console.log("BOINK!!! You attack, doing",character.getDamage(elementOfArray.name), "damage.\n",randomMobber.name,"has", randomMobber.health, "health left")                 
+            }
+            else if(myWeapon==="3"){
+                let elementOfArray = character.weapons[parseInt(myWeapon)-1];
+                randomMobber.health-= character.getDamage(elementOfArray.name);
+                console.log("BOINK!!! You attack, doing",character.getDamage(elementOfArray.name), "damage.\n",randomMobber.name,"has", randomMobber.health, "health left")                 
+            }
         }
     }
-   console.log("I chose a", character.className, "named", character.name, "and now it's too late to go back.");
-   console.log(character.name, "starts with", character.health, "HP and ", character.attack, "attack damage.\n\nOh shit!\n");
-   
 
-    while (character.health > 0 && randomMobber.health > 0){
-
-        console.log(randomMobber.name, "jumps out and attacks you! Inflicting", randomMobber.damage, "damage and has", randomMobber.health, "health remaining");
-
-// subtract damage automatically just because
-        character.health -= randomMobber.damage;
-        console.log(character.name, "only has", character.health, "HP left\n\n")
-        await attackloop();
-
-//         //next round
-//         randomMobber = mobs[chance.integer({min:0, max: (mobs.length-1)})];
-//         console.log(randomMobber.name, "jumps out and attacks you! Inflicting", randomMobber.damage, "damage");
-
-// // subtract damage automatically just because
-//         character.health -= randomMobber.damage;
-//         console.log(character.name, "only has", character.health, "HP left")
-
-
+    async function spellLoop(){
+        for(let i=0; i<character.spells.length;i++){
+            console.log("Press ", (i+1), " for ", character.spells[i])
+        }
+        const mySpell = await prompt("what spell do you want to cast?\n")
+        if(character.spells[parseInt(mySpell)-1]){
+            if (mySpell==="1"){
+                let elementOfSpellArray = character.spells[parseInt(mySpell)-1];
+                randomMobber.health-= character.getDamage(elementOfSpellArray.name);
+                console.log (elementOfSpellArray)
+                console.log("SHAZZZAM!! You cast a",elementOfSpellArray.name ,"spell, doing",character.getDamage(elementOfSpellArray.name), "damage.\n",randomMobber.name,"has", randomMobber.health, "health left")                 
+        
+            }
+            else if(mySpell==="2"){
+                let elementOfSpellArray = character.spells[parseInt(mySpell)-1];
+                randomMobber.health-= character.getDamage(elementOfSpellArray.name);
+                console.log (elementOfSpellArray)
+                console.log("SHAZZZAM!! You cast a",elementOfSpellArray.name ,"spell, doing",character.getDamage(elementOfSpellArray.name), "damage.\n",randomMobber.name,"has", randomMobber.health, "health left")                 
+        
+            }
+            else{
+                mobAttack();
+            }
+        }
     }
-  // throw console.error("bye");
 
-   // spawn a random mob then prompt to fight it
-   //lets take the first mob in the array, then if we beat it, we can fight the next one
-
-   //- Select random mobs to fight, in a "turn based" fighting system.
-
-console.log("press ctrl-c to quit");
-
+    async function petLoop(){
+        for(let i=0; i<character.pets.length;i++){
+            console.log("Press ", (i+1), " for ", character.pets[i])
+        }  
+        const myPet = await prompt("What pet do you want to summon?\n")
+        if(character.pets[parseInt(myPet)-1]){
+            if (myPet==="1"){
+                let elementOfPetArray = character.pets[parseInt(myPet)-1]
+                randomMobber.health-= character.getDamage(elementOfPetArray.name);
+ //               console.log (elementOfPetArray)
+                console.log("BIPPITY BOOP!!!You summoned a",elementOfPetArray.name ,"spell, doing",character.getDamage(elementOfPetArray.name), "damage.\n",randomMobber.name,"has", randomMobber.health, "health left")                 
+        
+            }
+            else  if (myPet==="2"){
+                let elementOfPetArray = character.pets[parseInt(myPet)-1]
+                randomMobber.health-= character.getDamage(elementOfPetArray.name);
+  //              console.log (elementOfPetArray)
+                console.log("BIPPITY BOOP!!!You summoned a",elementOfPetArray.name ,"spell, doing",character.getDamage(elementOfPetArray.name), "damage.\n",randomMobber.name,"has", randomMobber.health, "health left")                 
+        
+            }
+            else  if (myPet==="3"){
+                let elementOfPetArray = character.pets[parseInt(myPet)-1]
+                randomMobber.health-= character.getDamage(elementOfPetArray.name);
+  //              console.log (elementOfPetArray)
+                console.log("BIPPITY BOOP!!!You summoned a",elementOfPetArray.name ,"spell, doing",character.getDamage(elementOfPetArray.name), "damage.\n",randomMobber.name,"has", randomMobber.health, "health left")                 
+        
+            }
+        }    
+    }
+    //////////////////////////////////////////////////////
+    //THS IS WHERE THE GAME STARTS
+    console.log("I chose a", character.className, "named", character.name, "and now it's too late to go back.");
+    console.log(character.name, "starts with", character.health, "HP and ", character.attack, "attack damage.\n\nOh shit!\n");
+    console.log(randomMobber.name, "jumps out and attacks you! Inflicting", randomMobber.damage, "damage");
+    // subtract damage automatically just because
+    character.health -= randomMobber.damage;
+    console.log(character.name, "only has", character.health, "HP left")
+    // while (character.health > 0 || randomMobber.health > 0){
+    await attackloop();
+    console.log("press ctrl-c to quit");
 }
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-// THIS WAS THE PREVIOUS DAYS HOEWORK
-//-------------------------------------------
-
-// function wrastle(player1, mob){
-//     let player1Health = player1.health;
-//     let player2Health = player2.health;
- 
-//     while (player1Health > 0 && player2Health > 0)    {
-//         console.log("staring health", player1.name, player1Health)
-//         console.log("staring health", player2.name, player2Health)
-        
-        
-//         player1Health -= player2.getDamage();
-//         player2Health -= player1.getDamage();
-
-//         if (player1Health <= 0 && player2Health <= 0) {    //this part needs refinement.. could they both die?
-//             console.log ("Double murder.", " You both died, game over") //OK figured that out. now let's make them fight to the death
-//         }
-//         else if (player1Health <= 0) {    //this part needs refinement.. could they both die?
-//             console.log (player1.name, "is dead, game over")
-//         }
-//         else if (player2Health <= 0) {
-//             console.log (player2.name, "is dead, game over")
-//         }
-//         else if (player1.getDamage() === player2.getDamage()){  //this is directly related to homework, the above is just messin around
-//             console.log ("You both die.", "There are no ties")
-//         }
-//         else if (player1.getDamage() >= player2.getDamage()){
-//             console.log (player1.name, "wins this round with", player1.getDamage(), "damage vs.", player2.getDamage(), "damage")
-//         }
-//         else {
-//             console.log (player2.name, "wins this round with", player2.getDamage(), "damage vs.", player1.getDamage(), "damage")
-//         }
-//         if(player1.activeSpell){
-//             player1.mana = player1.mana - player1.activeSpell.mana;
-           
-//         }
-//         else if (player2.activeSpell){
-//             player2.mana = player2.mana - player2.activeSpell.mana;
-//         }
-        
-//         // for some reason I thought pets would use mana, but they don't so commented out.
-//         // if(player1.activePet){
-//         //     player1.mana = player1.mana - player1.activePet.mana;
-//         //     console.log("here");
-//         // } else if(player2.activePet){
-//         //     player2.mana = player2.mana - player2.activePet.mana;
-//         //     console.log("player 2 here")
-//         // }
-        
-//         console.log(player1.name, "has", player1Health, "health and", player1.mana, "mana remaining")
-//         console.log(player2.name, "has", player2Health, "health and", player2.mana, "mana remaining")
-//     }
-// }
-
-
-
-// shaman.levelUp();
-// console.log (shaman);
-// shaman.summonPet("shroom")
-// warlock.summonPet("imp")
-// // shaman.equipWeapon("morning star")
-// // mage.castSpell("fireball")
-// mage.levelUp();
-// mage.levelUp();
-// console.log (warlock);
-// console.log (mage.getDamage(config.spellNames.fireball));
-// console.log (warlock.getDamage("imp"));
-// console.log (shaman.getDamage(config.weapoNames.morningstar));
-console.log (shaman.attack);
-// console.log (shaman)
-// console.log (shaman.getDamage());
-// console.log (mage);
-// console.log (mage.getDamage());
-// console.log (warlock)
-// console.log (warlock.getDamage());
-// wrastle(mage, shaman);
-gameloop();
+    console.log("press ctrl-c anytime to quit");
+    gameloop();
