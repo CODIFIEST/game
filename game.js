@@ -117,9 +117,9 @@ function mobAttack(){
     async function attackloop(){
         ///////////////put the while loop here to test
       //////////////////////////////////////////////////////
-        while ((character.health > 0) || (randomMobber.health > 0)){   
+        while ((character.health > 0) && (randomMobber.health > 0)){   
             let yourMove;
-            while((!yourMove) && ((character.health > 0) || (randomMobber.health > 0))){
+            while(!yourMove){
                 console.log("You can attack, equip a weapon, summon a pet, or cast a spell each turn")
                 const killMob = await prompt("Press 1 2 3 or 4. If you press something else, you WILL lose a turn. kek\n")
                 if (killMob === "1"){
