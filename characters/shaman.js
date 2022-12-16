@@ -1,11 +1,12 @@
 const Pet = require ("./pet");
 const morningstar = require("../weapons/morningstar")
 const lightheal = require("../spells/lightheal")
-const Character = require("./character")
+const Character = require("./character");
+const config = require("../config/config");
 class Shaman extends Character {
     constructor (name, health){
         //Create the pet inside the constructor like from class
-        super (name, "shaman", 6, 6, 8, 3, 100, 100);
+        super (name, config.classNames.ShamanClassName, 6, 6, 8, 3, 100, 100);
         const pet = new Pet("shroom", 10, "hero's dose");
         this.pets = [];
         this.pets.push(pet);

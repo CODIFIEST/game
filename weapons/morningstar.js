@@ -1,3 +1,4 @@
+const config = require("../config/config");
 const Weapon = require("./weapon")
-const morningstar = new Weapon("morning star", 7)
+const morningstar = new Weapon(config.weapoNames.morningstar, 7)
 module.exports = morningstar;

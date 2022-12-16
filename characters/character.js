@@ -1,15 +1,17 @@
 //bring in spells.js
+const config = require("../config/config");
 const Spell = require("../spells/spell")
+//bring in config too
 
 //Base Character class that takes in the following constructor arguments:
 //name, className, attack, magic, defense, speed, health, mana, and sets the on the character
 //constructor should also initialize 3 empty arrays for weapons, pets, and spells
 class Character {
-    constructor(name, className, attck, magic, defense, speed, health, mana){
+    constructor(name, className, attack, magic, defense, speed, health, mana){
         this.name = name;
         this.className = className;
         this.level = 1;
-        this.attack = attck;
+        this.attack = attack;
         this.magic = magic;
         this.defense= defense;
         this.speed = speed;
@@ -25,44 +27,72 @@ class Character {
     }
     levelUp(){
         this.level += 1;
-        if (this.className ==="shaman"){
+        if (this.className === config.classNames.ShamanClassName){
             this.attack = this.attack + 1;
             this.health = this.health + 11;
             this.mana = this.mana +2;
         }
-        else if (this.className ==="mage"){
+        else if (this.className === config.classNames.MageClassName){
             this.mana = this.mana + 17;
             this.magic = this.magic + 1;
         }
-        else if (this.className === "warlock"){
+        else if (this.className === config.classNames.WarlockClassName){
             this.mana = this.mana + 11;
             this.health = this.health + 29;
             this.speed = this.speed +1;
         }
     }
 
-    getDamage(){
-        // keep track of a character's active pet. if there is one, get the pet's damage and add it
-        // to the character's magic damage
-        if(this.activePet){
-            const petDamage = this.activePet.damage;
-            const magicDamage = this.magic;
-            return petDamage + magicDamage;
-        } 
-        else if(this.activeSpell){
-            const spellPower = this.activeSpell.power;
-            const magicPower = this.magic;
-         // this was to verify compute   console.log (magicPower, "magic damage and spell damage", spellPower);
-            return spellPower + magicPower;
-        }
-        else if(this.activeWeapon){
-            const weaponDamage = this.activeWeapon.damage;
-            return this.attack + weaponDamage;
-        }
-        else {
-            return this.attack;
+    getDamage(spellPetWeapon){
+        if (spellPetWeapon){
+            const spell = this.spells.find(s => s.name === spellPetWeapon);
+            const pet = this.pets.find(s => s.name === spellPetWeapon);
+            const weapon = this.weapons.find(s => s.name === spellPetWeapon);
+            if (spell){
+                if(this.mana < spell.mana){
+                    console.log("you need more mana to cast", spell);
+                    return 0;
+                }
+                this.mana -=spell.mana;
+                return spell.power + this.magic;
+            } 
+            else if (pet){
+                const petDamage = pet.damage;
+                const magicDamage = this.magic;
+                return petDamage + magicDamage;
+            }
+            else if (weapon){
+                const weaponDamage = weapon.damage;
+                return this.attack + weaponDamage;
+            }
+            else {
+                return this.attack;
+            }
         }
     }
+            // keep track of a character's active pet. if there is one, get the pet's damage and add it
+            // to the character's magic damage
+            // ///////////////////////////////////////////////////
+            // this section removed to use objects instead of strings and to be able to pass
+            // in to getdamage either a pet, spell, or weapeon
+            // if(this.activePet===spellPetWeapon){
+            //     const petDamage = this.activePet.damage;
+            //     const magicDamage = this.magic;
+            //     return petDamage + magicDamage;
+            // } 
+            // else if(this.activeSpell===spellPetWeapon){
+                
+            //     const spellPower = this.activeSpell.power;
+            //     const magicPower = this.magic;
+            // // this was to verify compute   console.log (magicPower, "magic damage and spell damage", spellPower);
+            //     return spellPower + magicPower;
+            // }
+            // else if(this.activeWeapon===spellPetWeapon){
+            //     const weaponDamage = this.activeWeapon.damage;
+            //     return this.attack + weaponDamage;
+            // }
+            // /////////////////////////////////////////////////////////
+        
     // add a new pet to the character's pets array
     addPet(petName){
         this.pets.push(petName);
