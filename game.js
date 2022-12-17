@@ -252,8 +252,18 @@ function mobAttack(){
     // subtract damage automatically just because
     character.health -= randomMobber.damage;
     console.log(character.name, "only has", character.health, "HP left")
-    // while (character.health > 0 || randomMobber.health > 0){
+    
+    while (character.health > 0){
+    
     await attackloop();
+    character.levelUp();
+    console.log("You have leveled up. You are now level", character.level)
+    randomMobber = mobs[chance.integer({min:0, max: (mobs.length-1)})]
+    console.log("\nNew Mob", randomMobber.name, "spawned. watch out!\n")
+    mobAttack();
+
+    //console.log("do we get here?")
+    }
     console.log("press ctrl-c to quit");
 }
     console.log("press ctrl-c anytime to quit");
