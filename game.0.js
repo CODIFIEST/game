@@ -117,7 +117,7 @@ async function gameloop(){
     async function attackloop(){
        while ((character.health > 0) && (randomMobber.health > 0)){   
             let yourMove;
-  //          while(!yourMove){
+            while(!yourMove){
                 console.log("You can attack, equip a weapon, summon a pet, or cast a spell each turn")
                 const killMob = await prompt("Press 1 2 3 or 4. If you press something else, you WILL lose a turn. kek\n")
                 if (killMob === "1"){
@@ -158,7 +158,7 @@ async function gameloop(){
                     //console.log("OR 3rd place do we get here?")
                   //  mobAttack();
                 }
-          //  }
+            }
         }   
     }
     // Here we choose a weapon
@@ -244,40 +244,30 @@ async function gameloop(){
             }
         }    
     }
-    //ABOVE THE END OF THE ASYNC GAMELOOP FUNCTION
     //////////////////////////////////////////////////////
     //THS IS WHERE THE GAME STARTS
     console.log("I chose a", character.className, "named", character.name, "and now it's too late to go back.");
     console.log(character);
     console.log(character.name, "starts with", character.health, "HP and ", character.attack, "attack damage.\n\nOh shit!\n");
-    while (character.health > 0 && mobs.length > 0){
-        randomMobber = mobs[chance.integer({min:0, max: (mobs.length-1)})]
-        console.log(`\nNew Mob ${randomMobber.name} spawned. watch out!\n`)
-        let i = mobs.indexOf(randomMobber);
-        if (i > -1){
-            mobs.splice(i, 1)
-            console.log(mobs)
-        }
-        console.log(randomMobber.name, "jumps out and attacks you first inflicting", randomMobber.damage, "damage");
-        // subtract damage automatically just because
-        character.health -= randomMobber.damage;
-        console.log(character.name, "only has", character.health, "HP left")
+    console.log(randomMobber.name, "jumps out and attacks you! Inflicting", randomMobber.damage, "damage");
+    // subtract damage automatically just because
+    character.health -= randomMobber.damage;
+    console.log(character.name, "only has", character.health, "HP left")
     
-        await attackloop();
-        character.levelUp();
-        //TEMPLATE LITERALS 'BLAH BLAH $(character)
-        if (character.health > 0){
-        console.log(`You have leveled up. You are now level ${character.level}`)
-        }
-    //   mobAttack();
+    while (character.health > 0){
+    
+    await attackloop();
+    character.levelUp();
+    //TEMPLATE LITERALS 'BLAH BLAH $(character)
+    console.log(`You have leveled up. You are now level ${character.level}`)
+    randomMobber = mobs[chance.integer({min:0, max: (mobs.length-1)})]
+    console.log(`\nNew Mob ${randomMobber.name} spawned. watch out!\n`)
+ //   mobAttack();
 
 
-        //console.log("do we get here?")
+    //console.log("do we get here?")
     }
-    if(character.health <= 0){
     console.log("game over douche")
-    }
-    else {console.log(`Did I win?`)}
     console.log("press ctrl-c to quit");
 }
     console.log("press ctrl-c anytime to quit");
